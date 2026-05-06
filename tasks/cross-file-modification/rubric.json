@@ -1,0 +1,51 @@
+{
+  "task_id": "03-cross-file-modification",
+  "category": "cross_file_modification",
+  "max_score": 10,
+  "dimensions": [
+    {
+      "name": "完整性",
+      "weight": 0.25,
+      "description": "是否完成所有 Must Have 项",
+      "scoring": {
+        "10": "全部完成且无副作用",
+        "7": "完成核心，1-2 个非关键缺失",
+        "4": "完成一半，关键路径有缺",
+        "1": "几乎未完成"
+      }
+    },
+    {
+      "name": "代码质量",
+      "weight": 0.20,
+      "description": "可读性、命名、错误处理、类型完整"
+    },
+    {
+      "name": "架构合理性",
+      "weight": 0.20,
+      "description": "中间件抽象、配置分离、模块边界、扩展性"
+    },
+    {
+      "name": "对原代码理解",
+      "weight": 0.20,
+      "description": "是否遵循项目既有模式（路由组织、配置风格、测试风格）"
+    },
+    {
+      "name": "决策说明",
+      "weight": 0.15,
+      "description": "是否解释了关键选择（自造 vs 用库、IP vs userId、admin 跳过策略等）"
+    }
+  ],
+  "anti_patterns": [
+    "硬编码限流数值（应从配置读取）",
+    "复制粘贴重复中间件代码",
+    "破坏现有测试",
+    "引入与项目不一致的代码风格",
+    "在 admin 路由内部判断（应该路由级跳过）",
+    "限流逻辑混在业务 handler 内"
+  ],
+  "auto_check_hints": [
+    "grep 'process.env.RATE_LIMIT' src/  # 配置可覆盖",
+    "npm test  # 现有测试通过",
+    "curl 6 次 /auth/register 应有 5 次成功 + 1 次 429"
+  ]
+}
